@@ -1,0 +1,579 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Roboto';font-size: 18px;
+  font-weight: 400;
+  font-style: normal;
+  background-color: #ffffff;
+  color: #000000;
+  line-height: 1.5;
+}
+
+#progress-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 6px;
+  background: #f0f0f0;
+  z-index: 9999;
+}
+
+#progress-bar {
+  height: 6px;
+  width: 0%;
+  background: #990000;
+  transition: width 0.25s ease-out;
+}
+
+main { 
+  padding: 20px;
+  max-width: 700px;
+  margin: 60px auto;
+}
+
+.section-header {
+  background-color: #eeeeee;
+  padding: 10px;
+}
+
+.responsive-svg-container {
+  max-width: 800px;
+  margin: 20px auto;
+  min-height: 220px;
+}
+
+svg {
+  display: block;
+  background-color: white;
+  border-radius: 4px;
+}
+
+svg text {
+  font-family: 'Roboto';
+  font-size: 12px;
+  font-style: normal;
+  fill: black;
+}
+
+.intro-test.filler p .text-legend.shot.dead {
+  font-size: 21px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  cursor: initial;
+}
+
+.text-legend.shot.dead {
+  background-color: #990000;
+  color: #fff;
+  border: none;
+  padding-bottom: 4px;
+}
+
+.loaded-atlas .tk-atlas {
+  font-family: "Roboto";
+}
+
+@media only screen and (min-width: 50em) {
+  .intro__hed {
+    font-size: 64px;
+  }
+}
+
+@media only screen and (min-width: 30em) {
+  .intro__hed {
+    font-size: 48px;
+    line-height: 1.2;
+  }
+}
+
+.test-intro {
+  display: flex;
+  justify-content: center;     
+  align-items: center;         
+  height: 40vh;                
+  flex-direction: column;      
+  text-align: center;
+}
+
+#map {
+  width: 1230px;
+  height: 620px;
+  margin: 0 auto; 
+}
+
+#map svg {
+  width: 100%;
+  height: 80%;
+  display: block;
+}
+
+#map-title {
+  margin: 0;
+  padding: 0;
+}
+
+h2#map-title {
+  font-family: 'Roboto';
+  font-size: 24px;
+  margin-bottom: 5px; 
+}
+
+h3#map-title {
+  font-family: 'Roboto';
+  font-size: 18px;
+  margin-top: 0;
+  margin-bottom: 0px; 
+}
+
+#map {
+  margin-top: 0; 
+}
+
+.filter.active {
+  text-decoration-line: underline;
+  text-decoration-style: solid;
+}
+
+.paragraph {
+  margin-bottom: 20px;
+}
+
+.button {
+  font-family: 'Roboto';
+  font-weight: 500;
+  font-size: 14px;
+  text-transform: none;
+  letter-spacing: 0.05em;
+  background: transparent;
+  border: none;          
+  color: black;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;             
+  padding: 0;           
+}
+
+.button:hover {
+  color: #BB1919;       
+}
+
+.css-3pg3bk {
+  width: 16px;           
+  height: 16px;
+  fill: currentColor;    
+  display: block;
+}
+  html, body {
+    height: 100%;
+    margin: 0;
+  }
+  .leaflet-container {
+    height: 400px;
+    width: 600px;
+    max-width: 100%;
+    max-height: 100%;
+  }
+ 
+ .fl-scrolly-caption {
+  padding: 1.25em;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 10px;
+  text-align: center;
+  margin: 0 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  position: relative;
+  z-index: 2; 
+}
+
+.intro-test.filler p .text-legend.killed {
+  font-size: 21px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  cursor: initial;
+}
+
+.text-legend.killed {
+  background-color: #990000;
+  color: #fff;
+  border: none;
+  padding-bottom: 4px;
+  padding-left: 4px;
+  padding-right: 4px;
+  padding-top: 4px;
+}
+
+  .intro-test.filler p .text-legend.deadliest.year {
+    font-size: 21px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    cursor: initial;
+  }
+  
+  .text-legend.deadliest.year {
+    background-color: #990000;
+    color: #fff;
+    border: none;
+    padding-bottom: 4px;
+    padding-left: 4px;
+    padding-right: 4px;
+    padding-top: 4px;
+  }
+
+  .intro-test.filler p .text-legend.the.death.of.nearly-two.thirds.of.journalists {
+    font-size: 21px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    cursor: initial;
+  }
+  
+  .text-legend.the.death.of.nearly-two.thirds.of.journalists {
+    background-color: #990000;
+    color: #fff;
+    border: none;
+    padding-bottom: 4px;
+    padding-left: 4px;
+    padding-top: 4px;
+    padding-right: 4px;
+  }
+
+.scrolly-container {
+  position: relative;
+  min-height: 200vh; 
+ 
+}
+
+.scrolly-figure {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  height: 100vh; 
+  z-index: 1;
+  overflow: hidden;
+}
+
+.scrolly-figure img {
+  width: 90%;
+  height: 90%;
+  display: block;
+}
+
+.scrolly-text {
+  position: relative;
+  z-index: 2;
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 1rem 20px;
+  box-sizing: border-box;
+  background: transparent;
+}
+
+.scrolly-step {
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 0;
+  box-sizing: border-box;
+}
+
+.fl-scrolly-caption {
+  background: rgba(255,255,255,0.85);
+  border-radius: 10px;
+  padding: 1.25em;
+  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+  text-align: center;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+#chart1 {
+  width: 100%;
+  height: 100%;
+}
+
+@media only screen and (max-width: 600px) {
+  text {
+    font-size: 10px;
+  }
+  .x-axis text {
+    transform: rotate(-30deg);
+  }
+  #chart1 svg {
+    width: 100% !important;
+    height: auto !important;
+  }
+}
+
+    body {
+      font-family: 'Roboto';
+    }
+    #chart {
+      max-width: 960px;
+      margin: auto;
+    }
+    .tooltip {
+      position: absolute;
+      background: white;
+      border: 1px solid #ccc;
+      padding: 6px 8px;
+      font-size: 12px;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+
+.social-buttons a {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 5px;
+    color: white;
+    text-decoration: none;
+    font-size: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.social-buttons a.facebook {
+    background-color: #3b5998;
+}
+
+.social-buttons a.twitter {
+    background-color: black;
+}
+
+.social-buttons a.linkedin {
+    background-color: #0077b5;
+}
+
+        .social-buttons a:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    opacity: 0.9;
+}
+
+.masthead {
+  position: relative;
+  height: 100vh;
+  background-image: url('masthead.svg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed; 
+  background-repeat: no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  text-align: center;
+  z-index: 1;
+}
+
+.masthead::after {
+  
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 0;
+}
+
+.masthead-inner {
+  position: relative;
+  z-index: 1;
+  padding: 2rem;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+}
+
+
+.article {
+  position: relative;
+  background: white;
+  z-index: 2;
+  padding: 4rem 2rem;
+  margin-top: -20vh;  
+  padding-top: 25vh;  
+}
+
+.masthead-inner h1 {
+  color: white; 
+}
+
+.byline-container {
+  margin-top: 1rem;
+}
+
+.intro_byline {
+  font-style: normal;
+  margin: 0;
+  font-size: 1rem;
+  color: white;
+  text-align: left;
+}
+
+.intro__date {
+  display: block;
+  font-size: 0.9rem;
+  color: #ccc;
+  margin-top: 0.25rem;
+  text-align: left;
+}
+
+  .quote-mark {
+    font-weight: normal;
+  }
+  .transcript-text {
+    font-weight: normal;
+    transition: background-color 0.3s ease;
+    padding-left: 4px;
+    padding-right: 4px;
+    cursor: pointer;
+  }
+  .transcript-text.active {
+    background-color: #f0f4ff;
+    border-left: 3px solid #4a90e2;
+  }
+
+  .audio-transcript-wrapper {
+  max-width: 600px;
+  margin: 40px auto;
+  text-align: center;
+}
+
+.uk-card-body p {
+  font-family: 'Roboto';
+  font-size: 18px;
+  line-height: 1.5;
+  color: #222;
+}
+  .audio-player {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+  }
+
+  .play-button {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: #1380A1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s ease;
+    position: relative;
+  }
+
+  .play-button:hover {
+    background: #1380A1;
+  }
+
+  
+  .play-icon {
+    width: 0;
+    height: 0;
+    border-left: 14px solid white;
+    border-top: 9px solid transparent;
+    border-bottom: 9px solid transparent;
+    margin-left: 3px;
+  }
+
+  
+  .pause-icon {
+    width: 14px;
+    height: 18px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .pause-icon div {
+    background: white;
+    width: 4px;
+    height: 100%;
+  }
+
+ 
+  .waveform {
+    display: flex;
+    margin-left: 12px;
+  }
+  .waveform div {
+    width: 4px;
+    height: 10px;
+    margin: 0 1px;
+    background: #1380A1;
+    animation: wave 1.2s infinite ease-in-out;
+    border-radius: 2px;
+  }
+  .waveform div:nth-child(1) { animation-delay: 0s; }
+  .waveform div:nth-child(2) { animation-delay: 0.15s; }
+  .waveform div:nth-child(3) { animation-delay: 0.3s; }
+  .waveform div:nth-child(4) { animation-delay: 0.45s; }
+  .waveform div:nth-child(5) { animation-delay: 0.6s; }
+
+  @keyframes wave {
+    0%, 100% { height: 10px; }
+    50% { height: 18px; }
+  }
+
+  .transcript-text.active {
+  background-color: yellow;
+  transition: background-color 0.3s ease;
+}
+
+
+.transcript-box {
+  margin-top: 1rem;
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #f9f9f9;
+}
+
+
+.transcript-box p {
+  text-align: center;
+  line-height: 1.6;
+}
+
+
+#toggle-transcript {
+  display: none;
+}
+
+.intro__hed {
+  font-size: 2.25rem;
+  font-weight: bold;
+  line-height: 1.2;
+  color: white;
+  margin: 0 auto 1.5rem auto;
+}
+
+.intro__subhed {
+  font-size: 1.25rem;
+  color: white; 
+  font-weight: 400;
+  line-height: 1.4;
+  max-width: 680px;
+  margin: 0 auto 1.5rem auto;
+}
+  .n-content-image {
+    display: inline-block;
+    max-width: 100%;
+  }
+  
+  .n-content-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  
+  .below-caption {
+    margin-top: 8px;
+    font-size: 0.9rem;
+    color: #333;
+  }
+ 
