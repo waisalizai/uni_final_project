@@ -1,0 +1,1791 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="description" content="Interactive map showing the number of journalists killed by country. Explore data, trends, and insights about press freedom and journalist safety around the world.">
+  <meta name="keywords" content="journalist deaths, press freedom, D3 map, data visualisation, interactive map, journalists killed, global journalism, press safety, CPJ data">
+  <meta name="author" content="Wais Ahmad Alizai">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Global Map of Journalists Killed – Interactive Visualisation</title>
+  <link type="text/css" rel="stylesheet" href="js/uikit-3.15.14/css/uikit.min.css" />
+  <script type="text/javascript" src="js/uikit-3.15.14/js/uikit.min.js"></script>
+  <script src="js/d3.v7.min.js"></script>
+  <script src="https://unpkg.com/scrollama"></script>
+  <link rel="stylesheet" href="css/leaflet.css"/>
+  <script src="js/leaflet.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <script type="text/javascript" src="js/uikit-3.15.14/js/uikit-icons.min.js"></script>
+  <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
+
+  <style>
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Roboto';font-size: 18px;
+  font-weight: 400;
+  font-style: normal;
+  background-color: #ffffff;
+  color: #000000;
+  line-height: 1.5;
+}
+
+#progress-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 6px;
+  background: #f0f0f0;
+  z-index: 9999;
+}
+
+#progress-bar {
+  height: 6px;
+  width: 0%;
+  background: #990000;
+  transition: width 0.25s ease-out;
+}
+
+main { 
+  padding: 20px;
+  max-width: 700px;
+  margin: 60px auto;
+}
+
+.section-header {
+  background-color: #eeeeee;
+  padding: 10px;
+}
+
+.responsive-svg-container {
+  max-width: 800px;
+  margin: 20px auto;
+  min-height: 220px;
+}
+
+svg {
+  display: block;
+  background-color: white;
+  border-radius: 4px;
+}
+
+svg text {
+  font-family: 'Roboto';
+  font-size: 12px;
+  font-style: normal;
+  fill: black;
+}
+
+.intro-test.filler p .text-legend.shot.dead {
+  font-size: 21px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  cursor: initial;
+}
+
+.text-legend.shot.dead {
+  background-color: #990000;
+  color: #fff;
+  border: none;
+  padding-bottom: 4px;
+}
+
+.loaded-atlas .tk-atlas {
+  font-family: "Roboto";
+}
+
+@media only screen and (min-width: 50em) {
+  .intro__hed {
+    font-size: 64px;
+  }
+}
+
+@media only screen and (min-width: 30em) {
+  .intro__hed {
+    font-size: 48px;
+    line-height: 1.2;
+  }
+}
+
+.test-intro {
+  display: flex;
+  justify-content: center;     
+  align-items: center;         
+  height: 40vh;                
+  flex-direction: column;      
+  text-align: center;
+}
+
+#map {
+  width: 1230px;
+  height: 620px;
+  margin: 0 auto; 
+}
+
+#map svg {
+  width: 100%;
+  height: 80%;
+  display: block;
+}
+
+#map-title {
+  margin: 0;
+  padding: 0;
+}
+
+h2#map-title {
+  font-family: 'Roboto';
+  font-size: 24px;
+  margin-bottom: 5px; 
+}
+
+h3#map-title {
+  font-family: 'Roboto';
+  font-size: 18px;
+  margin-top: 0;
+  margin-bottom: 0px; 
+}
+
+#map {
+  margin-top: 0; 
+}
+
+.filter.active {
+  text-decoration-line: underline;
+  text-decoration-style: solid;
+}
+
+.paragraph {
+  margin-bottom: 20px;
+}
+  </style>
+<style>
+
+.button {
+  font-family: 'Roboto';
+  font-weight: 500;
+  font-size: 14px;
+  text-transform: none;
+  letter-spacing: 0.05em;
+  background: transparent;
+  border: none;          
+  color: black;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;             
+  padding: 0;           
+}
+
+.button:hover {
+  color: #BB1919;       
+}
+
+.css-3pg3bk {
+  width: 16px;           
+  height: 16px;
+  fill: currentColor;    
+  display: block;
+}
+  </style>
+
+
+<style>
+  html, body {
+    height: 100%;
+    margin: 0;
+  }
+  .leaflet-container {
+    height: 400px;
+    width: 600px;
+    max-width: 100%;
+    max-height: 100%;
+  }
+</style>
+
+
+<style>
+ 
+ .fl-scrolly-caption {
+  padding: 1.25em;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 10px;
+  text-align: center;
+  margin: 0 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  position: relative;
+  z-index: 2; 
+}
+  </style>
+
+<style>
+
+.intro-test.filler p .text-legend.killed {
+  font-size: 21px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  cursor: initial;
+}
+
+.text-legend.killed {
+  background-color: #990000;
+  color: #fff;
+  border: none;
+  padding-bottom: 4px;
+  padding-left: 4px;
+  padding-right: 4px;
+  padding-top: 4px;
+}
+
+</style>
+
+
+<style>
+
+  .intro-test.filler p .text-legend.deadliest.year {
+    font-size: 21px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    cursor: initial;
+  }
+  
+  .text-legend.deadliest.year {
+    background-color: #990000;
+    color: #fff;
+    border: none;
+    padding-bottom: 4px;
+    padding-left: 4px;
+    padding-right: 4px;
+    padding-top: 4px;
+  }
+  
+  </style>
+
+<style>
+
+  .intro-test.filler p .text-legend.the.death.of.nearly-two.thirds.of.journalists {
+    font-size: 21px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    cursor: initial;
+  }
+  
+  .text-legend.the.death.of.nearly-two.thirds.of.journalists {
+    background-color: #990000;
+    color: #fff;
+    border: none;
+    padding-bottom: 4px;
+    padding-left: 4px;
+    padding-top: 4px;
+    padding-right: 4px;
+  }
+  
+  </style>
+<style>
+
+.scrolly-container {
+  position: relative;
+  min-height: 200vh; 
+ 
+}
+
+.scrolly-figure {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  height: 100vh; 
+  z-index: 1;
+  overflow: hidden;
+}
+
+.scrolly-figure img {
+  width: 90%;
+  height: 90%;
+  display: block;
+}
+
+.scrolly-text {
+  position: relative;
+  z-index: 2;
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 1rem 20px;
+  box-sizing: border-box;
+  background: transparent;
+}
+
+.scrolly-step {
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 0;
+  box-sizing: border-box;
+}
+
+.fl-scrolly-caption {
+  background: rgba(255,255,255,0.85);
+  border-radius: 10px;
+  padding: 1.25em;
+  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+  text-align: center;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+
+    </style>
+
+    <style>
+#chart1 {
+  width: 100%;
+  height: 100%;
+}
+      </style>
+
+      <style>
+@media only screen and (max-width: 600px) {
+  text {
+    font-size: 10px;
+  }
+  .x-axis text {
+    transform: rotate(-30deg);
+  }
+  #chart1 svg {
+    width: 100% !important;
+    height: auto !important;
+  }
+}
+        </style>
+<style>
+
+
+    body {
+      font-family: 'Roboto';
+    }
+    #chart {
+      max-width: 960px;
+      margin: auto;
+    }
+    .tooltip {
+      position: absolute;
+      background: white;
+      border: 1px solid #ccc;
+      padding: 6px 8px;
+      font-size: 12px;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+  
+
+</style>
+
+<style>
+
+.social-buttons a {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 5px;
+    color: white;
+    text-decoration: none;
+    font-size: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.social-buttons a.facebook {
+    background-color: #3b5998;
+}
+
+.social-buttons a.twitter {
+    background-color: black;
+}
+
+.social-buttons a.linkedin {
+    background-color: #0077b5;
+}
+
+        .social-buttons a:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    opacity: 0.9;
+}
+  
+  </style>
+<style>
+
+.masthead {
+  position: relative;
+  height: 100vh;
+  background-image: url('masthead.svg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed; 
+  background-repeat: no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  text-align: center;
+  z-index: 1;
+}
+
+.masthead::after {
+  
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 0;
+}
+
+.masthead-inner {
+  position: relative;
+  z-index: 1;
+  padding: 2rem;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+}
+
+
+.article {
+  position: relative;
+  background: white;
+  z-index: 2;
+  padding: 4rem 2rem;
+  margin-top: -20vh;  
+  padding-top: 25vh;  
+}
+
+.masthead-inner h1 {
+  color: white; 
+}
+
+.byline-container {
+  margin-top: 1rem;
+}
+
+.intro_byline {
+  font-style: normal;
+  margin: 0;
+  font-size: 1rem;
+  color: white;
+  text-align: left;
+}
+
+.intro__date {
+  display: block;
+  font-size: 0.9rem;
+  color: #ccc;
+  margin-top: 0.25rem;
+  text-align: left;
+}
+
+</style>
+  
+
+<style>
+  .quote-mark {
+    font-weight: normal;
+  }
+  .transcript-text {
+    font-weight: normal;
+    transition: background-color 0.3s ease;
+    padding-left: 4px;
+    padding-right: 4px;
+    cursor: pointer;
+  }
+  .transcript-text.active {
+    background-color: #f0f4ff;
+    border-left: 3px solid #4a90e2;
+  }
+
+  .audio-transcript-wrapper {
+  max-width: 600px;
+  margin: 40px auto;
+  text-align: center;
+}
+
+.uk-card-body p {
+  font-family: 'Roboto';
+  font-size: 18px;
+  line-height: 1.5;
+  color: #222;
+}
+</style>
+
+<style>
+  .audio-player {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+  }
+
+  .play-button {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: #1380A1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s ease;
+    position: relative;
+  }
+
+  .play-button:hover {
+    background: #1380A1;
+  }
+
+  
+  .play-icon {
+    width: 0;
+    height: 0;
+    border-left: 14px solid white;
+    border-top: 9px solid transparent;
+    border-bottom: 9px solid transparent;
+    margin-left: 3px;
+  }
+
+  
+  .pause-icon {
+    width: 14px;
+    height: 18px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .pause-icon div {
+    background: white;
+    width: 4px;
+    height: 100%;
+  }
+
+ 
+  .waveform {
+    display: flex;
+    margin-left: 12px;
+  }
+  .waveform div {
+    width: 4px;
+    height: 10px;
+    margin: 0 1px;
+    background: #1380A1;
+    animation: wave 1.2s infinite ease-in-out;
+    border-radius: 2px;
+  }
+  .waveform div:nth-child(1) { animation-delay: 0s; }
+  .waveform div:nth-child(2) { animation-delay: 0.15s; }
+  .waveform div:nth-child(3) { animation-delay: 0.3s; }
+  .waveform div:nth-child(4) { animation-delay: 0.45s; }
+  .waveform div:nth-child(5) { animation-delay: 0.6s; }
+
+  @keyframes wave {
+    0%, 100% { height: 10px; }
+    50% { height: 18px; }
+  }
+
+  .transcript-text.active {
+  background-color: yellow;
+  transition: background-color 0.3s ease;
+}
+
+
+.transcript-box {
+  margin-top: 1rem;
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #f9f9f9;
+}
+
+
+.transcript-box p {
+  text-align: center;
+  line-height: 1.6;
+}
+
+
+#toggle-transcript {
+  display: none;
+}
+
+</style>
+
+<style>
+.intro__hed {
+  font-size: 2.25rem;
+  font-weight: bold;
+  line-height: 1.2;
+  color: white;
+  margin: 0 auto 1.5rem auto;
+}
+
+.intro__subhed {
+  font-size: 1.25rem;
+  color: white; 
+  font-weight: 400;
+  line-height: 1.4;
+  max-width: 680px;
+  margin: 0 auto 1.5rem auto;
+}
+  </style>
+
+
+<style>
+  .n-content-image {
+    display: inline-block;
+    max-width: 100%;
+  }
+  
+  .n-content-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  
+  .below-caption {
+    margin-top: 8px;
+    font-size: 0.9rem;
+    color: #333;
+  }
+  </style>
+
+  </head>
+
+<body>
+
+  <section class="masthead">
+    <div class="masthead-inner">
+      <div class="test-intro">
+        <div class="intro-test">
+          <h1 class="intro__hed">
+            Journalist deaths hit record levels amid surge in global conflicts
+          </h1>
+          <p class="intro__subhed">
+            At least 1,661 journalists have been killed due to their work from 1992 to 2024 – including 124 journalists and media workers in 2024 alone.
+          </p>
+        </div>
+        <div class="byline-container">
+          <p class="intro_byline Roboto">
+            By <strong>Wais Ahmad Alizai</strong>
+          </p>
+          <time class="intro__date" datetime="2025-07-10T11:32">
+            10/07/2025
+          </time>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  
+  
+  
+  <div class="uk-container uk-width-3-5@m uk-margin-top">
+
+    <div id="progress-container">
+      <div id="progress-bar"></div>
+    </div>
+
+
+    <div class="social-buttons">
+      <a href="https://www.facebook.com/wais.ahmad.5" class="facebook" title="Facebook" target="_blank">
+        <i class="fab fa-facebook-f"></i>
+      </a>
+      <a href="https://x.com/w_a_alizai" class="twitter" title="X" target="_blank">
+        <i class="fab fa-x-twitter"></i>
+      </a>
+      <a href="https://www.linkedin.com/in/waisahmadalizai" class="linkedin" title="LinkedIn" target="_blank">
+        <i class="fab fa-linkedin-in"></i>
+      </a>
+    </div>
+    
+
+    <svg style="display:none;">
+      <symbol id="icon-play" viewBox="0 0 24 24">
+        <polygon points="6,4 20,12 6,20" />
+      </symbol>
+    </svg>
+    
+
+   <p> An American-British national and freelance journalist Christopher Allen was <span class="text-legend shot dead" > shot dead </span> on 26 August 2017 after embedding with rebel forces to cover a clash in South Sudan. </p>
+
+   <div class="main-image">
+    <figure class="n-content-image n-content-image--full">
+      <picture>
+        <source media="(min-width: 700px)" srcset="christopher_allen.jpg">
+        <img src="christopher_allen.jpg" alt="Christopher Allen">
+      </picture>
+      <figcaption class="below-caption">
+         Allen in South Sudan in 2017. Photo courtesy of the 
+        <a href="https://www.christopherallen.org/" target="_blank">Christopher Allen website</a>, used with permission from his family.
+      </figcaption>
+    </figure>
+  </div> 
+
+
+  <p> Allen was killed by government forces and his dead body was "deliberately stripped naked", according to <a href="https://www.doughtystreet.co.uk/news/family-journalist-killed-south-sudan-say-governments-have-failed-him-and-call-investigation">his family statement.</a> </p>
+  
+  <p> South Sudanese Minister of Information Michael Makuei, while addressing a ceremony to mark the International Day to End Impunity for Crimes against Journalists in 2022, called him a "rebel". Makuei said that the government was not launching an investigation into the case. </p>
+
+  <p> "This man entered South Sudan illegally and it is why I declared in a statement that we have killed a white rebel because he was killed on the side of rebels," <a href="https://sudantribune.com/article266333/"> said Makuei </a>. </p>
+
+  <p> Allen is not just a one-off case. More journalists were killed in 2024 than at any point in the past three decades, said a report by the Committee to Protect Journalists (CPJ) in 2025.</p>
+
+  <p> Lecturer at Goldsmiths Dr Omega Douglas said that the level of danger for journalists reporting on conflict has been rising, with some of the most authoritative politicians showing no regard for the significance of journalism and the protection of journalists. </p>
+
+  <p> Douglas said: "Tragically, as the CPJ and other organisations highlight, reporting on conflict is extremely dangerous and the level of danger for journalists is increasing in a world where some of the most powerful politicians, including in the largest democracies, show a complete disregard for the importance of journalism and the safety of journalists." </p>
+
+  <div class="scrolly-container">
+
+    <div class="scrolly-figure">
+      <img src="Rplot.png" alt="Map Background" />
+    </div>
+  
+    <div class="scrolly-text">
+      <div class="scrolly-step" data-step="1">
+        <div class="fl-scrolly-caption">
+          <p>In 2024, 113 journalists and media personnel were <span class="text-legend killed">killed</span> with confirmed motives, according to CPJ data.</p>
+        </div>
+      </div>
+  
+      <div class="scrolly-step" data-step="2">
+        <div class="fl-scrolly-caption">
+          <p> 2024 was regarded as the <span class="text-legend deadliest year"> deadliest year </span> for journalists in the past three decades.</p>
+        </div>
+      </div>
+  
+      <div class="scrolly-step" data-step="3">
+        <div class="fl-scrolly-caption">
+          <p>CPJ blamed Israel for <span class="text-legend the death of nearly-two thirds of journalists"> the death of nearly-two thirds of journalists </span> in 2024</p>
+        </div>
+      </div>
+    </div>
+  
+  </div>
+    
+
+  <p> In Allen’s case, the British and the US embassies in Juba released a joint statement in August 2023 urging the South Sudanese government to carry out a transparent investigation. </p>
+
+  <p> “The U.S. and U.K. Embassies renew calls for the transitional Government of South Sudan to conduct a credible investigation into the death of Christopher Allen, to make the results public, and to ensure accountability.  After six years, Mr. Allen’s family, friends, and colleagues deserve answers,” <a href="https://ss.usembassy.gov/joint-statement-on-christopher-allen-by-the-embassies-of-the-united-states-of-america-and-of-the-united-kingdom-in-juba-south-sudan/"> said the statement. </a></p>
+
+  <p> After widespread outcries and repeated calls, the South Sudanese government finally conducted a probe into his death, findings of which have been largely called into question and are believed not to have been aimed at establishing the truth.</p>
+
+  <p> CPJ’s Africa programme coordinator Muthoki Mumo said: "It is a relief that after six long years, South Sudanese authorities have reconsidered their refusal to investigate Christopher Allen’s killing, although the investigation committee’s tight deadline raises serious concerns that it may become a mere public relations exercise instead of a genuine desire to establish the truth."</p>
+
+  <p> <a href="https://rsf.org/en/south-sudan-failed-investigation-perpetuates-impunity-killing-journalist-christopher-allen"> Reporters Without Borders said in April 2024 </a> that the investigation had created a hindrance to the path to justice. </p>
+
+  <p> Likewise, the US Department of State said that the investigation had not answered questions about his killing.</p>
+
+  <p> “The subsequently released report does not address in a comprehensive manner all the factors that led to Mr. Allen’s death or the disrespectful treatment of his remains. We renew our call on the transitional government to conduct a credible investigation into Mr. Allen’s death and to demonstrate the political will to take accountability seriously,” <a href="https://2021-2025.state.gov/renewing-the-call-for-the-south-sudan-transitional-government-to-conduct-a-credible-investigation-into-journalist-christopher-allens-death/"> said the US Department of State </a>. </p>
+
+  <p> Yet, circumstances around his death have not come to light. His family who received a scanned photo of 12-page letter have come to suspect that the death was not as a result of an accident of war or crossfire but a targeted killing, <a href="https://www.tortoisemedia.com/listen/pig-iron/white-rebel"> said a Tortoise podcast presenter, Basia Cummings</a>. </p>
+
+  <p> It is still a big question mark whether he was a reckless freelancer, a mercenary, or a young and ambitious reporter who had been caught in crossfire? </p>
+  
+  <p> There is no end in sight to the ongoing wars in Ukraine and Gaza. Journalists continue to suffer casualties, with CPJ data showing that 34 journalists and media workers have been killed so far in 2025. </p>
+   
+   <p> The majority of these deaths - 22 - happened in what CPJ describes as Israel and the Occupied Palestinian Territories. The figures highlight the increasing dangers media workers and journalists face while covering conflicts.  
+  </p>
+  
+  <h2 class="uk-text-bold .uk-heading-medium uk-margin-small-bottom">2024 classed as deadliest year for journalists</h2>
+  
+  <p> At least 103 journalists, including 87 men and 16 women, were killed in 2024, the highest figure in the past three decades. The data only include journalist deaths and confirmed cases. </p>
+
+  <p> According to <a href="https://cpj.org/data-methodology/"> CPJ methodology</a>, the committee considers a case “confirmed” as work-related only when it becomes certain that a journalist was killed directly because of his or her work in combat or crossfire; or while carrying out a dangerous assignment.</p>
+
+  <p> CPJ said <a href="https://cpj.org/special-reports/2024-is-deadliest-year-for-journalists-in-cpj-history-almost-70-percent-killed-by-israel/"> in its report published on 12 February 2025 </a> Israel was responsible for 70% of journalist deaths in 2024. </p>
+    
+  <p> The number of wars whether be they political, criminal or military in nature have increased twofold over the past five years while the highest number of deaths of journalists have occurred in countries such as Sudan, Pakistan, and Myanmar, said <a href="https://cpj.org/special-reports/2024-is-deadliest-year-for-journalists-in-cpj-history-almost-70-percent-killed-by-israel/"> the CPJ report. </a> </p>
+
+  <h3 class="uk-text-bold">Number of journalists killed from 1992 to 2024</h3>
+<div id="filters" style="margin-bottom: 1rem;"></div>
+<div style="max-width: 1000px; width: 90vw; margin: auto;">
+  <div id="chart1" style="width: 1050px; height: 400px;"></div>
+</div>
+<div id="tooltip1" 
+     style="position:absolute; 
+            background:white; 
+            border:1px solid #ccc; 
+            padding:5px; 
+            border-radius:4px; 
+            opacity:0; 
+            pointer-events:none; 
+            font-size:12px;">
+</div>
+
+  <p> The report said that the highest number of journalists killed in Israel-Gaza war reached 85 in 2024 and 78 in 2023. Of 85, three were killed in Lebanon. </p>
+
+  <p> Hamza Yusuf - a British-Palestinian writer and journalist - blamed Israel for “systematic” targeting journalists in Gaza. </p>  
+
+  <figure class="uk-align-right uk-width-1-3">
+    <div uk-lightbox>
+    <a href="Hamza2.jpg" data-caption="Yusuf said Palestinians on the ground play an important role in documenting and filming clashes as Israel has blocked the entry of foreign journalists into Gaza."
+    text>
+    <img src="Hamza2.jpg" >
+    </a>
+    </div>
+    <figcaption class="uk-text-center uk-text-small">
+    
+    Yusuf blamed Israel for journalist deaths in Gaza   
+      
+    </figcaption>
+    </figure>
+   
+  
+  <p> “There's definitely been a systematic targeting of Palestinian journalists in Gaza, and this has a very sinister objective,” said Hamza. </p>
+  <p>  Hamza insisted that banning foreign journalists from entry into Gaza had made local people turn into “accidental war correspondents” to report on incidents happening in the strip. </p> 
+   <p>  Hamza said: “Many of them are not journalists by trade, and have become, what some people call, <a href="https://www.youtube.com/shorts/HD-dfEwEOH4"> 'accidental war correspondents' </a>. They are the sole way in which Israel's crimes can be shown to the outside world and are heavily relied upon and used by social media as well as major broadcasters and media outlets.” </p>
+   <p> Hamza continued: “To Israel, this is unacceptable. And the systematic killing of them illustrates this. Israel has such a level of impunity from a compliant international community that it has even admitted on multiple occasions that it is actively kills Palestinian journalists, like Hossam Shabat from Al Jazeera and the recent assassination of Hassen Isleh.” </p>
+
+ <p> Furthermore, Taghreed hailing from Gaza stated her belief that Gaza had witnessed huge number of fatalities among journalist and media workers. </p>
+
+  <p> Taghreed, now a media and communication student in London, blamed Israeli forces for “deliberately” targeting journalists in Gaza to eliminate what she called evidence of war crimes there. She cited figures on journalist deaths that cannot be independently verified.</p>
+
+  
+  <div class="audio-transcript-wrapper uk-container uk-width-4-5@m uk-margin-large-top">
+    <div class="uk-grid uk-child-width-1-2@m" uk-grid>
+      
+      <div>
+        <p class="uk-text-lead">Listen to audio interview with Taghreed</p>
+        <div
+          class="audio-player"
+          id="customAudioPlayer"
+          role="button"
+          tabindex="0"
+          aria-label="Play audio"
+          style="margin-top: 1em;"
+        >
+          <div class="play-button" id="playPauseBtn">
+            <div class="play-icon" id="playIcon"></div>
+          </div>
+          <div class="waveform" id="waveform" style="display:none;">
+            <div></div><div></div><div></div><div></div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <audio id="myAudio" src="interview.mp3"></audio>
+        
+
+        <button
+          class="uk-button uk-button-default uk-margin-small"
+          type="button"
+          uk-toggle="target: #toggle-animation-multiple; animation: uk-animation-slide-left, uk-animation-slide-bottom"
+        >
+          Show/Hide Transcript
+        </button>
+
+        <div
+          id="toggle-animation-multiple"
+          hidden
+          class="uk-card uk-card-default uk-card-body uk-margin-small"
+        >
+          <span class="quote-mark">“</span>
+          <span data-start="0" data-end="6" class="transcript-text">
+            I guess the many places where it [CPJ report] mentioned and many countries where mentioned where things are not that stable,
+          </span>
+          <span data-start="6" data-end="17" class="transcript-text">
+            and yet Gaza, especially Gaza, Palestine, had the hugest number, the biggest number towards the many journalists that they were killed.
+          </span>
+          <span data-start="17" data-end="23" class="transcript-text">
+            And we know who is responsible for that, the Israeli occupation.
+          </span>
+          <span data-start="23" data-end="35" class="transcript-text">
+            And I was like stating some notes here in a paper that in 2024, 58 journalists were dead, were killed.
+          </span>
+          <span data-start="35" data-end="38" class="transcript-text">
+            And in 2023, 78 journalists were killed.
+          </span>
+          <span data-start="38" data-end="48" class="transcript-text">
+            Since so far in 2025, at least 170 journalists killed till this moment.
+          </span>
+          <span data-start="48" data-end="58" class="transcript-text">
+            In total, I guess like that 333 journalists were killed in total since 2023 to this moment.
+          </span>
+          <span data-start="58" data-end="01:02" class="transcript-text">
+            And why why they are targeted.
+          </span>
+          <span data-start="01:02" data-end="01:14" class="transcript-text">
+            It is really quite obvious because the Israeli occupation wants to erase any source of evidence that they are committing a war crimes in that area.
+          </span>
+          <span class="quote-mark">”</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+    <p> According to CPJ data, 124 journalists and media workers- including both confirmed and unconfirmed cases- were killed in 2024, highlighting the growing threats to journalism and the free flow of information worldwide. </p>  
+
+     <h2 id="map-title" class="uk-text-bold">CPJ says 124 journalists, media workers killed in 2024</h2>
+     <h3 id="map-title" class="uk-text-secondary">82 killed in 'Israel and the Occupied Palestinian Territory'</h3>
+     <div id="map" class="responsive-svg-container"></div>
+     <button id="map-reset" class="hidden">Reset Zoom</button>
+     <div id="map-tooltip"></div>
+    
+
+  <p> A drone strike by Israeli forces on 7 January 2024 killed Hamza Al Dahdouh, 27-year-old cameraman working for Al Jazeera TV channel, along with freelance video journalist Mustafa Thuraya while returning from reporting on refugees in southern Gaza, according to the CPJ report. </p>
+
+  <p> However, Israel <a href="https://www.washingtonpost.com/world/2024/03/19/gaza-journalists-killed-israel-al-jazeera-footage/"> labelled Al Dahdouh </a> as "a terrorist", an accusation his media outlet and family seriously dismissed. </p>
+    
+    “He, like so many journalists before him, was killed simply for doing his job and for shining a light on events that the Israeli army would rather stay in the dark and hidden from scrutiny,” <a href="https://www.middleeasteye.net/news/israel-palestine-gaza-war-jazeera-rejects-army-false-justification-journalist-killing#:~:text=%22Hamza%20Wael%20Al%2DDahdouh%20was,sent%20to%20Middle%20East%20Eye."> Al Jazeera told Middle East Eye </a>.</p>
+ 
+    <p> Also, <a href="https://cpj.org/2024/08/cpj-denounces-israels-smearing-of-killed-palestinian-journalists-with-unsubstantiated-terrorist-labels/"> CPJ urged </a> Israel to stop labelling journalists killed by its soldiers as terrorists. It demanded that investigation be launched into these killings. </p>
+
+    <p> Despite being contacted via email, the Israeli embassy in London has yet to comment on the CPJ report’s findings. </p>
+    <p> Nonetheless, the Israel Defence Forces (IDF) said in response to <a href="https://www.timesofisrael.com/liveblog_entry/idf-rejects-report-accusing-it-of-being-responsible-for-70-of-journalist-deaths-in-2024-says-many-were-terrorists/"> a query by The Times of Israel </a> that it had taken measures to reduce civilian casualties during its military operation in the strip. </p>
+
+    <p> “The IDF takes all possible measures to minimize harm to civilians, including journalists. The IDF has never, and never will, intentionally target journalists,” said IDF. </p>
+
+    <p> IDF reiterated its stance about hitting military targets and militants while saying that it does not attack civilians, including journalists and media workers. </p>
+      
+    <p> It said: “Under international humanitarian law, a member of an organized armed group [such as the military wing of Hamas], or a person directly participating in hostilities, is considered a lawful target. As it seems, many on the published list include members of the military wing of Hamas and are therefore lawful targets under international law.” </p>
+
+    <h2 class="uk-text-bold .uk-heading-medium uk-margin-small-bottom"> Dozens of journalists killed in Russia-Ukraine war </h2>
+
+    <p> Two media workers were killed in the Russian-Ukraine war in 2024, bringing the total number of journalists killed since Russian full-scale invasion in 2022 to 13. </p>
+
+    <p> <a href="https://rsf.org/en/three-years-russian-full-scale-invasion-ukraine-nearly-150-journalists-attacked"> Reporters Without Borders (RSF) said in a report</a>:“In 2024, two media professionals lost their lives while covering Russia’s full-scale invasion of Ukraine, bringing the total number of reporters killed since 2022 to 13, 12 of whom died on Ukrainian soil.” </p>
+
+    <p> It said that Ryan Evans, a security advisor for the British news agency Reuters, was killed in a strike hitting his hotel in Kramatorsk city in eastern Ukraine. A Ukrainian journalist Victoria Roshchyna died in detention in Russia. </p>
+
+    <p> “The family of Ukrainian freelance journalist Victoria Roshchyna received an official letter from Russian authorities announcing her death. Detained since August 2023, she is believed to have died on 19 September 2024,” said the RSF report. </p>   
+
+  <div id="map1" style="width: 800px; height: 400px;"></div>
+
+
+  <h2 class="uk-text-bold .uk-heading-medium uk-margin-small-bottom"> Most journalists killed are local </h2>
+
+  
+   <p> At least 97% of all journalists killed in 2024 were local journalists covering stories in their own countries.  </p> 
+
+
+  <h3 class="uk-text-bold"> Local and foreign journalists killed from 1992 to 2024 </h3>
+  <div id="chart"></div>
+  <div class="tooltip" id="tooltip"></div>
+
+
+  <p> Meanwhile, the countries with the highest numbers of journalists killed from 1992 to 2024 are Iraq, Israel and “the Occupied Palestinian Territory”, Syria, Mexico, Philippines and Pakistan. </p> 
+    
+   <p> According to the CPJ data, Iraq has the highest number of journalists murdered for their work, with 114 cases, Philippines and Mexico followed with 92 and 62 deaths, respectively. Israel and “the Occupied Palestinian Territory” also have the highest number of journalists killed due to dangerous assignment. </p> 
+
+
+   <div style="min-height:720px" id="datawrapper-vis-8NXHJ"><script type="text/javascript" defer src="https://datawrapper.dwcdn.net/8NXHJ/embed.js" charset="utf-8" data-target="#datawrapper-vis-8NXHJ"></script><noscript><img src="https://datawrapper.dwcdn.net/8NXHJ/full.png" alt="" /></noscript></div>
+
+   <p> Killing is not the only threat journalists face. CPJ said in <a href="https://cpj.org/special-reports/in-record-year-china-israel-and-myanmar-are-worlds-leading-jailers-of-journalists/"> a new report </a> that number of journalists jailed worldwide reached a near all-time high in 2024. </p>
+
+   <p> CPJ CEO Jodie Ginsberg <a href="https://cpj.org/2025/01/journalist-jailings-near-record-high-in-2024-as-crackdown-on-press-freedom-grows/"> said </a>: “A rise in attacks on journalists almost always precedes a rise in attacks on other freedoms – the freedom to give and receive information, the freedom to assemble and move freely, the freedom to protest.” </p>
+
+   <h3 class="uk-text-bold">Journalists imprisoned globally</h3>
+
+<div id="chart3-container">
+ <div id="chart3"></div>
+</div>
+
+<div id="tooltip" style="position: absolute; background: #fff; border: 1px solid #ccc; padding: 5px; pointer-events: none; opacity: 0;"></div>
+   
+   <p> CPJ takes a snapshot of journalists in prison at the beginning of December each year and the figure includes anyone working as a journalist, jailed for activities related to their work. </p>
+
+   <p> Countries with the highest numbers of imprisoned journalists in 2024 included: </p>
+
+   <ul class="uk-list">
+    <li>China 50</li>
+    <li>“Israel and the Occupied Palestinian Territory” 43</li>
+    <li>Myanmar 35</li>
+    <li>Belarus 31</li>
+    <li> Russia 30 </li>
+</ul>
+
+  <h2 class="uk-text-bold .uk-heading-medium uk-margin-small-bottom"> Measures should be taken to ensure journalists’ safety in war zones </h2>
+
+  <p> International Centre for Journalists (ICFJ) has provided guidance on the physical, mental and digital safety of journalists in war zones. 
+  
+  <p> Dr Douglas said: "The ICJF has <a href="https://www.icfj.org/news/safety-tips-journalists-conflict-zones"> good guidance </a> which outlines a three-pronged approach to the safety of journalists in war zones: physical, mental and digital. It's critical that due diligence is done in advance of going to any conflict zone to report, particularly if journalists are freelance and may not have the same level of institutional support as staff journalists.” </p>
+
+  <p> Dr Douglas insisted that governments should carry out transparent probes into the killings of journalists because it is fundamental for protecting journalists in war zones. </p>
+
+  <p> “Governments holding one another to account for their actions and conducting robust investigations into the killing of any journalist is key to protecting journalists in war zones,” said Dr Douglas. </p>
+
+  <p> International and civil society organisations must continue to exert pressure at state level and call for violence against journalists by the authorities and other actors to end, according to Douglas. </p>
+
+  <p> Dr Douglas said: “News media organisations could collaborate more to share training and resources to support all journalists, whether freelance or staff, covering conflict." </p>
+
+  <p></p>
+
+  </div>  
+
+  <footer style="background-color: white; color: #333; font-family: Georgia, serif; padding: 40px 20px; border-top: 1px solid #ccc;">
+
+    <div style="max-width: 900px; margin: auto; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 20px;">
+      <div style="flex: 1 1 200px;">
+        <h4 style="margin-bottom: 10px;">About the Author</h4>
+        <p style="margin: 5px 0;">Wais Ahmad Alizai - Student at Goldsmiths</p>
+        <p style="margin: 5px 0;">&copy; <span id="year"></span> All rights reserved.</p>
+        <a href="mailto:wais.ahmad.alizai@gmail.com" style="color: #333; text-decoration: underline;">wais.ahmad.alizai@gmail.com</a>
+      </div>
+
+      <div style="flex: 1 1 200px;">
+        <h4 style="margin-bottom: 10px;">Credits and Sources</h4>
+        <ul style="list-style: none; padding: 0; line-height: 1.6;">
+          <li>Masthead image created in Canva</li>
+          <li>Charts and maps created using R, D3, and Leaflet</li>
+          <li>Data sourced from the Committee to Protect Journalists (CPJ)</li>
+          <li>Data cleaned and analysed using Python (Pandas), SQL, R, and Excel</li>
+          <li>All other sources are hyperlinked within the piece</li>
+        </ul>
+      </div>
+  
+    </div>
+  
+    <hr style="margin: 30px auto; width: 80%; border-color: whitesmoke;">
+  
+  </footer>
+
+
+  <script>
+    const audio = document.getElementById('myAudio');
+    const playPauseBtn = document.getElementById('playPauseBtn');
+    const playIcon = document.getElementById('playIcon');
+    const waveform = document.getElementById('waveform');
+    const spans = document.querySelectorAll('.transcript-text');
+  
+    function timeToSeconds(t) {
+      if (!t.includes(':')) return parseFloat(t);
+      const parts = t.split(':').map(Number);
+      return parts.length === 2 ? parts[0] * 60 + parts[1] : parseFloat(t);
+    }
+  
+    playPauseBtn.addEventListener('click', () => {
+      if (audio.paused) {
+        audio.play();
+      } else {
+        audio.pause();
+      }
+    });
+  
+    audio.addEventListener('play', () => {
+      playIcon.className = 'pause-icon';
+      playIcon.innerHTML = '<div></div><div></div>';
+      waveform.style.display = 'flex';
+    });
+  
+    audio.addEventListener('pause', () => {
+      playIcon.className = 'play-icon';
+      playIcon.innerHTML = '';
+      waveform.style.display = 'none';
+    });
+  
+    if (audio.paused) {
+      playIcon.className = 'play-icon';
+      playIcon.innerHTML = '';
+      waveform.style.display = 'none';
+    }
+  
+    audio.ontimeupdate = () => {
+      const time = audio.currentTime;
+      spans.forEach(span => {
+        const start = timeToSeconds(span.getAttribute('data-start'));
+        const end = timeToSeconds(span.getAttribute('data-end'));
+  
+        if (time >= start && time < end) {
+          span.classList.add('active');
+        } else {
+          span.classList.remove('active');
+        }
+      });
+    };
+  </script>
+  
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+
+
+<script>
+  
+  const map1 = L.map('map1').setView([48.723903, 37.567915], 15);
+
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+  }).addTo(map1);
+
+  const customIcon = L.icon({
+  iconUrl: 'images/marker-icon.png', 
+  iconSize:     [32, 32],
+  iconAnchor:   [16, 32],
+  popupAnchor:  [0, -32]
+});
+
+L.marker([48.723903, 37.567915], { icon: customIcon }).addTo(map1)
+  .bindPopup(`
+    <b>Ryan Evans</b><br />
+    <i>Reuters</i><br />
+    Killed in a missile strike that hit the Hotel Sapphire in Kramatorsk, Ukraine <br />
+    <b>Date:</b> 23/08/2024 </br>
+    <i>Source: <a href="https://cpj.org/data/people/ryan-evans/"> CPJ<i> <br/>
+  `)
+  .openPopup();
+  const popup = L.popup();
+
+  function onMapClick(e) {
+    popup
+      .setLatLng(e.latlng)
+      .setContent(`You clicked the map at ${e.latlng.toString()}`)
+      .openOn(map1);
+  }
+
+  map1.on('click', onMapClick);
+</script>
+
+<script>
+  window.onscroll = function() {
+    var winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+    var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    var scrolled = (winScroll / height) * 100;
+    document.getElementById("progress-bar").style.width = scrolled + "%";
+  };
+  const scroller = scrollama();
+
+  scroller
+    .setup({
+      step: '.scrolly-step', 
+      offset: 0.5, 
+      debug: false,
+    })
+    .onStepEnter(response => {
+      console.log('Step entered:', response.index, response.element, response.direction);
+    })
+    .onStepExit(response => {
+      console.log('Step exited:', response.index, response.element, response.direction);
+    });
+
+  window.addEventListener('resize', scroller.resize);
+</script>
+
+<script>
+  const margin = { top: 30, right: 50, bottom: 100, left: 70 },
+        width = 900 - margin.left - margin.right,
+        height = 500 - margin.top - margin.bottom;
+
+  const svg = d3.select("#chart")
+    .append("svg")
+    .attr("width", "100%")
+    .attr("height", height + margin.top + margin.bottom)
+    .attr("viewBox", `0 0 ${width + margin.left + margin.right} ${height + margin.top + margin.bottom}`)
+    .attr("preserveAspectRatio", "xMidYMid meet")
+    .append("g")
+    .attr("transform", `translate(${margin.left},${margin.top})`);
+
+  const color1 = d3.scaleOrdinal()
+    .domain(["Local", "Foreign"])
+    .range(["#1380A1", "#5AB8E5"]);
+
+  const tooltip = d3.select("#tooltip");
+
+  d3.csv("data/local_foreign_journalists.csv", d => ({
+    Year: d.Year.trim(),
+    Local: +d["Local"],
+    Foreign: +d["Foreign"]
+  })).then(data => {
+    const stack = d3.stack().keys(["Local", "Foreign"]);
+    const stackedData = stack(data);
+
+    const x = d3.scaleBand()
+      .domain(data.map(d => d.Year))
+      .range([0, width])
+      .padding(0.1);
+
+    const y = d3.scaleLinear()
+      .domain([0, d3.max(data, d => d.Local + d.Foreign)])
+      .nice()
+      .range([height, 0]);
+
+  
+    svg.append("g")
+      .attr("transform", `translate(0,${height})`)
+      .call(d3.axisBottom(x))
+      .selectAll("text")
+      .attr("transform", "rotate(-45)")
+      .style("text-anchor", "end");
+
+  
+    svg.append("g")
+      .call(d3.axisLeft(y));
+
+   
+    svg.selectAll("g.layer")
+      .data(stackedData)
+      .join("g")
+      .attr("class", "layer")
+      .attr("fill", d => color1(d.key))
+      .selectAll("rect")
+      .data(d => d)
+      .join("rect")
+      .attr("x", d => x(d.data.Year))
+      .attr("y", d => y(d[1]))
+      .attr("height", d => y(d[0]) - y(d[1]))
+      .attr("width", x.bandwidth())
+      .on("mouseover", (event, d) => {
+        const key = event.target.parentNode.__data__.key;
+        tooltip.style("opacity", 1)
+          .html(`Year: ${d.data.Year}<br>${key}: ${d[1] - d[0]}`);
+      })
+      .on("mousemove", (event) => {
+        tooltip
+          .style("left", (event.pageX + 10) + "px")
+          .style("top", (event.pageY - 28) + "px");
+      })
+      .on("mouseout", () => {
+        tooltip.style("opacity", 0);
+      });
+
+    const labelYears = {
+      "1997": "Local",
+      "1994": "Foreign"
+    };
+
+    Object.entries(labelYears).forEach(([year, labelText]) => {
+      const barData = data.find(d => d.Year === year);
+      const total = barData.Local + barData.Foreign;
+      svg.append("text")
+        .attr("x", x(year) + x.bandwidth() / 2)
+        .attr("y", y(total) - 6)
+        .attr("text-anchor", "middle")
+        .attr("font-size", "12px")
+        .attr("font-weight", "bold")
+        .attr("fill", "black")
+        .text(labelText);
+    });
+
+   
+    svg.append("text")
+      .attr("x", 0)
+      .attr("y", height + 60)
+      .attr("font-size", "20px")
+      .attr("fill", "black")
+      .attr("text-anchor", "start")
+      .text("Source: CPJ data; chart created with D3");
+  });
+</script>
+
+<script>
+  const container = d3.select("#chart1");
+
+  const margin1 = { top: 30, right: 270, bottom: 180, left: 70 },
+        width1 = 1000 - margin1.left - margin1.right,
+        height1 = 500 - margin1.top - margin1.bottom;
+
+  const svg1 = d3.select("#chart1")
+    .append("svg")
+    .attr("width", "100%")
+    .attr("height", height1 + margin1.top + margin1.bottom)
+    .attr("viewBox", `0 0 ${width1 + margin1.left + margin1.right} ${height1 + margin1.top + margin1.bottom}`)
+    .attr("preserveAspectRatio", "xMidYMid meet")
+    .append("g")
+    .attr("transform", `translate(${margin1.left},${margin1.top})`);
+    const tooltip1 = d3.select("#tooltip1");
+
+  const filters = [
+    { id: "Deaths", label: "All", isActive: true },
+    { id: "female", label: "Female", isActive: false },
+    { id: "male", label: "Male", isActive: false }
+  ];
+
+  const color = d3.scaleOrdinal()
+    .domain(["Male", "Female"])
+    .range(["#1380A1", "#990000"]);
+
+  d3.csv("data/journalists_killed.csv", d => ({
+    Year: +d.Year,
+    Male: +d.Male,
+    Female: +d.Female
+  })).then(data => {
+    const x = d3.scaleBand()
+      .domain(data.map(d => d.Year))
+      .range([0, width1])
+      .padding(0.1);
+
+    const y = d3.scaleLinear().range([height1, 0]);
+
+    svg1.append("g")
+      .attr("class", "x-axis")
+      .attr("transform", `translate(0,${height1})`);
+
+    svg1.append("g")
+      .attr("class", "y-axis");
+
+    svg1.select(".x-axis")
+      .call(d3.axisBottom(x).tickValues(x.domain().filter((d, i) => i % 2 === 0)))
+      .selectAll("text")
+      .attr("transform", "rotate(-40)")
+      .style("text-anchor", "end");
+
+    const updateChart = (data, filterId) => {
+      let keys;
+      if (filterId === "Deaths") keys = ["Male", "Female"];
+      else if (filterId === "male") keys = ["Male"];
+      else if (filterId === "female") keys = ["Female"];
+
+      const stackedData = d3.stack().keys(keys)(data);
+
+      y.domain([0, d3.max(data, d => keys.reduce((sum, k) => sum + d[k], 0))]).nice();
+      svg1.select(".y-axis").transition().duration(500).call(d3.axisLeft(y));
+
+      const groups = svg1.selectAll("g.layer")
+        .data(stackedData, d => d.key);
+
+      groups.exit().remove();
+
+      const newGroups = groups.enter()
+        .append("g")
+        .attr("class", "layer")
+        .attr("fill", d => color(d.key));
+
+      const mergedGroups = newGroups.merge(groups);
+
+      const rects = mergedGroups.selectAll("rect")
+        .data(d => d, d => d.data.Year);
+
+      rects.enter()
+        .append("rect")
+        .on("mouseover", (event, d) => {
+          const key = d3.select(event.currentTarget.parentNode).datum().key;
+          tooltip1.style("opacity", 1)
+            .html(`Year: ${d.data.Year}<br>${key}: ${d.data[key]}`);
+        })
+        .on("mousemove", (event) => {
+          tooltip1
+            .style("left", (event.pageX + 10) + "px")
+            .style("top", (event.pageY - 28) + "px");
+        })
+        .on("mouseout", () => {
+          tooltip1.style("opacity", 0);
+        })
+        .merge(rects)
+        .transition().duration(500)
+        .attr("x", d => x(d.data.Year))
+        .attr("y", d => y(d[1]))
+        .attr("height", d => y(d[0]) - y(d[1]))
+        .attr("width", x.bandwidth());
+
+      rects.exit().remove();
+    };
+
+    const populateFilters = (data) => {
+      d3.select("#filters")
+        .selectAll(".filter")
+        .data(filters)
+        .join("button")
+        .attr("class", d => `filter ${d.isActive ? "active" : ""}`)
+        .text(d => d.label)
+        .on("click", (event, d) => {
+          filters.forEach(f => f.isActive = f.id === d.id);
+          populateFilters(data);
+          updateChart(data, d.id);
+        })
+        .order();
+    };
+
+    populateFilters(data);
+    updateChart(data, "Deaths");
+
+    svg1.append('text')
+      .attr('x', -70)          
+      .attr('y', height1 + 50)
+      .attr('font-size', '12px')
+      .attr('fill', 'black')
+      .attr('text-anchor', 'start')   
+      .text('Data includes only journalists, not media workers, killed with confirmed motive');
+
+    svg1.append('text')
+      .attr('x', width1 + 5)  
+      .attr('y', height1 + 50)
+      .attr('font-size', '12px')
+      .attr('fill', 'black')
+      .attr('text-anchor', 'end')    
+      .text('Source: CPJ data; chart created with D3');
+  });
+</script>
+
+<script>
+
+  window.addEventListener('scroll', () => {
+    const scrollTop = window.scrollY;
+    const docHeight = document.body.scrollHeight - window.innerHeight;
+    const progress = (scrollTop / docHeight) * 100;
+    document.getElementById('progress-bar').style.width = progress + '%';
+  });
+</script>
+
+
+<script type="module">
+  import * as d3 from 'https://cdn.jsdelivr.net/npm/d3@7/+esm';
+  import { scaleSequential } from 'https://cdn.jsdelivr.net/npm/d3-scale@4/+esm';
+  import { interpolateYlGnBu } from 'https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3/+esm';
+  import {
+    annotation,
+    annotationCalloutElbow
+  } from 'https://cdn.skypack.dev/d3-svg-annotation';
+
+  const width2 = 1230;
+  const height2 = 620;
+
+  const svg2 = d3.select("#map")
+    .append("svg")
+    .attr("viewBox", `0 0 ${width2} ${height2}`)
+    .attr("width", width2)
+    .attr("height", height2);
+
+  const projection = d3.geoEqualEarth()
+    .translate([width2 / 2, height2 / 2])
+    .scale(250);
+
+  const geoPathGenerator = d3.geoPath().projection(projection);
+  const graticuleGenerator = d3.geoGraticule();
+
+  const countryColorScale = scaleSequential(interpolateYlGnBu).domain([1, 82]);
+
+  Promise.all([
+    d3.json("data/world.geojson"),
+    d3.csv("data/journalists_map.csv")
+  ]).then(([world, journalists]) => {
+
+    svg2.append("g")
+      .attr("fill", "none")
+      .attr("stroke", "#666")
+      .attr("stroke-opacity", 0.2)
+      .append("path")
+      .datum(graticuleGenerator())
+      .attr("d", geoPathGenerator);
+
+    const countsByCountry = {};
+    journalists.forEach(d => {
+      const country = d.Country.trim();
+      countsByCountry[country] = (countsByCountry[country] || 0) + 1;
+    });
+
+    world.features.forEach(d => {
+      const countryName = d.properties.ADMIN || d.properties.name || d.properties.country;
+      d.properties.journalists = countsByCountry[countryName] || 0;
+    });
+
+    const showTooltip = (text) => {
+      d3.select("#map-tooltip")
+        .text(text)
+        .transition()
+        .style("opacity", 1);
+    };
+
+    const hideTooltip = () => {
+      d3.select("#map-tooltip")
+        .transition()
+        .style("opacity", 0);
+    };
+
+    svg2.selectAll(".country-path")
+      .data(world.features)
+      .join("path")
+      .attr("class", "country-path")
+      .attr("d", geoPathGenerator)
+      .attr("fill", d => d.properties.journalists > 0
+        ? countryColorScale(d.properties.journalists)
+        : "#f8fcff")
+      .attr("stroke", "#09131b")
+      .attr("stroke-opacity", 0.4)
+      .attr("stroke-width", 0.5)
+      .on("mouseenter", (event, d) => {
+        const count = d.properties.journalists;
+        const name = d.properties.ADMIN || d.properties.name || d.properties.country;
+        const label = count === 1 ? "journalist" : "journalists";
+        const text = `${name}: ${count} ${label} killed`;
+        showTooltip(text);
+      })
+      .on("mouseleave", hideTooltip)
+      .append("title")
+      .text(d => {
+        const name = d.properties.ADMIN || d.properties.name || d.properties.country;
+        const count = d.properties.journalists;
+        return `${name}: ${count} journalist${count === 1 ? '' : 's'}`;
+      });
+
+    const sortedCountries = world.features
+      .filter(d => d.properties.journalists > 0)
+      .sort((a, b) => b.properties.journalists - a.properties.journalists);
+
+    const topN = 5; 
+    const topCountriesForAnnotation = sortedCountries.slice(0, topN);
+
+    const annotationOffsets = {
+        "Palestine": { dx: -80, dy: -60 }, 
+        "Sudan": { dx: 60, dy: -40 },
+        "Pakistan": { dx: -80, dy: -20 },
+        "Mexico": { dx: 80, dy: 60 },
+        "Syria": { dx: 50, dy: -50 }
+    };
+    const russia = sortedCountries.find(d => {
+  const name = d.properties.ADMIN || d.properties.name || d.properties.country;
+  return name === "Russia";
+});
+
+if (russia && !topCountriesForAnnotation.includes(russia)) {
+  topCountriesForAnnotation.push(russia);
+}
+
+    const annotations = topCountriesForAnnotation.map(d => {
+      const [x, y] = projection(d3.geoCentroid(d));
+      const countryName = d.properties.ADMIN || d.properties.name || d.properties.country;
+
+      const offset = annotationOffsets[countryName] || { dx: (Math.random() * 60) - 30, dy: (Math.random() * 40) - 20 };
+
+      return {
+        note: {
+          title: countryName, 
+          label: `${d.properties.journalists} journalist${d.properties.journalists === 1 ? '' : 's'} killed`,
+          wrap: 150,
+          align: "middle", 
+          padding: 10,
+          bgPadding: 5,
+          fontSize: 50, 
+          lineType: "horizontal"
+
+        },
+        x,
+        y,
+        dx: offset.dx,
+        dy: offset.dy,
+        type: annotationCalloutElbow,
+        connector: {
+          end: "arrow",
+          stroke: "#d62728",
+          strokeWidth: 2,
+          elbow: 10,
+          radius: 5
+        },
+        subject: {
+          radius: 4,
+          fill: "#d62728",
+          stroke: "#fff",
+          strokeWidth: 1.5
+        }
+      };
+    });
+
+    const makeAnnotations = annotation()
+      .type(annotationCalloutElbow)
+      .annotations(annotations)
+      .accessors({
+        x: d => d.x,
+        y: d => d.y
+      });
+
+    svg2.append("g")
+      .attr("class", "annotation-group")
+      .call(makeAnnotations);
+
+    svg2.append('text')
+      .attr('x', width2 - 10)
+      .attr('y', height2 + 60)
+      .attr('text-anchor', 'end')
+      .attr('font-size', '20px')
+      .attr('fill', '#555')
+      .style('font-family', 'Roboto')
+      .text('Source: CPJ data, map created with D3');
+
+      d3.select('head').append('style').text(`
+  .annotation-note-label tspan.bold-number {
+    font-weight: bold;
+  }
+`);
+
+    const zoomHandler = d3.zoom()
+      .scaleExtent([1, 5])
+      .translateExtent([[0, 0], [width2 * 1.5, height2 * 1.5]])
+      .on("zoom", (e) => {
+        svg2.selectAll(".country-path")
+          .attr("transform", e.transform);
+        svg2.selectAll(".annotation-group")
+          .attr("transform", e.transform);
+
+        const resetButton = d3.select("#map-reset");
+
+        if (e.transform.k !== 1 || e.transform.x !== 0 || e.transform.y !== 0) {
+          resetButton.classed("hidden", false);
+        } else {
+          resetButton.classed("hidden", true);
+        }
+      });
+
+    svg2.call(zoomHandler);
+
+    const legendHeight = 350;
+    const legendWidth = 12;
+    const legendX = 20;
+    const legendY = height2 / 2 - legendHeight / 2;
+
+    const defs = svg2.append("defs");
+    const gradient = defs.append("linearGradient")
+      .attr("id", "legend-gradient-vertical")
+      .attr("x1", "0%")
+      .attr("x2", "0%")
+      .attr("y1", "100%")
+      .attr("y2", "0%");
+
+    const legendSteps = 10;
+    const domain = countryColorScale.domain();
+
+    for (let i = 0; i <= legendSteps; i++) {
+      const t = i / legendSteps;
+      gradient.append("stop")
+        .attr("offset", `${t * 100}%`)
+        .attr("stop-color", countryColorScale(domain[0] + t * (domain[1] - domain[0])));
+    }
+
+    const legendGroup = svg2.append("g")
+      .attr("transform", `translate(${legendX}, ${legendY})`);
+
+    legendGroup.append("rect")
+      .attr("width", legendWidth)
+      .attr("height", legendHeight)
+      .style("fill", "url(#legend-gradient-vertical)")
+      .style("stroke", "#ccc")
+      .style("stroke-width", 1);
+
+    const legendScale = d3.scaleLinear()
+      .domain(domain)
+      .range([legendHeight, 0]);
+
+    const legendAxis = d3.axisRight(legendScale)
+      .ticks(6)
+      .tickFormat(d3.format("d"));
+
+    legendGroup.append("g")
+      .attr("transform", `translate(${legendWidth}, 0)`)
+      .call(legendAxis);
+
+    legendGroup.append("text")
+      .attr("x", -20)
+      .attr("y", -10)
+      .attr("text-anchor", "start")
+      .style("font-size", "15px")
+      .text("Journalists Killed");
+
+    d3.select("#map-reset")
+      .classed("hidden", true)
+      .on("click", () => {
+        svg2.transition()
+          .duration(750)
+          .call(zoomHandler.transform, d3.zoomIdentity);
+      });
+
+  }).catch(error => {
+    console.error("Error loading data or rendering map:", error);
+  });
+</script>
+
+
+<script>
+  const margin3 = { top: 30, right: 30, bottom: 100, left: 70 },
+        width3 = 900 - margin3.left - margin3.right,
+        height3 = 500 - margin3.top - margin3.bottom;
+
+  const svg3 = d3.select("#chart3")
+    .append("svg")
+    .attr("width", "100%")
+    .attr("height", height3 + margin3.top + margin3.bottom)
+    .attr("viewBox", `0 0 ${width3 + margin3.left + margin3.right} ${height3 + margin3.top + margin3.bottom}`)
+    .attr("preserveAspectRatio", "xMidYMid meet")
+    .append("g")
+    .attr("transform", `translate(${margin3.left},${margin3.top})`);
+
+  const tooltip3 = d3.select("#tooltip");
+
+  d3.csv("journalist_jailed.csv", d => ({
+    Year: d.Year.trim(),
+    Imprisoned: +d.Imprisoned
+  })).then(data => {
+   
+    const x = d3.scaleBand()
+      .domain(data.map(d => d.Year))
+      .range([0, width3])
+      .padding(0.1);
+
+    
+    const y = d3.scaleLinear()
+      .domain([0, d3.max(data, d => d.Imprisoned)])
+      .nice()
+      .range([height3, 0]);
+
+   
+    svg3.append("g")
+      .attr("transform", `translate(0,${height3})`)
+      .call(d3.axisBottom(x))
+      .selectAll("text")
+      .attr("transform", "rotate(-45)")
+      .style("text-anchor", "end");
+
+   
+    svg3.append("g")
+      .call(d3.axisLeft(y));
+
+   
+    function drawBars(data) {
+      svg3.selectAll("rect")
+        .data(data)
+        .join("rect")
+        .attr("x", d => x(d.Year))
+        .attr("width", x.bandwidth())
+        .attr("y", height3) 
+        .attr("height", 0)  
+        .attr("fill", "#1380A1")
+        .on("mouseover", (event, d) => {
+          tooltip3.style("opacity", 1)
+            .html(`Year: ${d.Year}<br>Imprisoned: ${d.Imprisoned}`);
+        })
+        .on("mousemove", (event) => {
+          tooltip3
+            .style("left", (event.pageX + 10) + "px")
+            .style("top", (event.pageY - 28) + "px");
+        })
+        .on("mouseout", () => {
+          tooltip3.style("opacity", 0);
+        })
+        .transition()
+.duration(800)
+.ease(d3.easeCubicOut)
+
+        .delay((d, i) => i * 50)
+        .attr("y", d => y(d.Imprisoned))
+        .attr("height", d => height3 - y(d.Imprisoned));
+    }
+
+    
+    const observer = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting) {
+        drawBars(data); 
+        observer.disconnect(); 
+      }
+    }, { threshold: 0.5 });
+
+    observer.observe(document.querySelector("#chart3-container"));
+
+    
+    svg3.append("text")
+      .attr("x", 0)
+      .attr("y", height3 + 60)
+      .attr("font-size", "20px")
+      .attr("fill", "black")
+      .attr("text-anchor", "start")
+      .text("Source: CPJ data; chart created with D3");
+  });
+</script>
+
+</body>
+
+</html>
