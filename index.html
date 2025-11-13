@@ -1,29 +1,102 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Interactive map showing the number of journalists killed by country. Explore data, trends, and insights about press freedom and journalist safety around the world.">
+    <meta name="keywords" content="journalist deaths, press freedom, D3 map, data visualisation, interactive map, journalists killed, global journalism, press safety, CPJ data">
+    <meta name="author" content="Wais Ahmad Alizai">
   
-  <meta charset="UTF-8">
-  <meta charset="UTF-8">
-  <meta name="description" content="Interactive map showing the number of journalists killed by country. Explore data, trends, and insights about press freedom and journalist safety around the world.">
-  <meta name="keywords" content="journalist deaths, press freedom, D3 map, data visualisation, interactive map, journalists killed, global journalism, press safety, CPJ data">
-  <meta name="author" content="Wais Ahmad Alizai">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Global Map of Journalists Killed – Interactive Visualisation</title>
-  <link type="text/css" rel="stylesheet" href="js/uikit-3.15.14/css/uikit.min.css" />
-  <script type="text/javascript" src="js/uikit-3.15.14/js/uikit.min.js"></script>
-  <script src="js/d3.v7.min.js"></script>
-  <script src="https://unpkg.com/scrollama"></script>
-  <link rel="stylesheet" href="css/leaflet.css"/>
-  <script src="js/leaflet.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <script type="text/javascript" src="js/uikit-3.15.14/js/uikit-icons.min.js"></script>
-  <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="css/style.css">
-
-</head>
+    <title>Global Map of Journalists Killed – Interactive Visualisation</title>
+  
+    <!-- CSS -->
+    <link type="text/css" rel="stylesheet" href="js/uikit-3.15.14/css/uikit.min.css" />
+    <link rel="stylesheet" href="css/leaflet.css"/>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
+  
+    <!-- JS dependencies -->
+    <script src="js/d3.v7.min.js"></script>
+    <script src="js/uikit-3.15.14/js/uikit.min.js"></script>
+    <script src="js/uikit-3.15.14/js/uikit-icons.min.js"></script>
+    <script src="js/leaflet.js"></script>
+    <script src="https://unpkg.com/scrollama"></script>
+  
+    <!-- Your JS file -->
+    <script src="d3charts.js" defer></script>
+  </head>
+  
 <body>
   
+  <section class="masthead">
+    <div class="masthead-inner">
+      <div class="test-intro">
+        <div class="intro-test">
+          <h1 class="intro__hed">
+            Journalist deaths hit record levels amid surge in global conflicts
+          </h1>
+          <p class="intro__subhed">
+            At least 1,661 journalists have been killed due to their work from 1992 to 2024 – including 124 journalists and media workers in 2024 alone.
+          </p>
+        </div>
+        <div class="byline-container">
+          <p class="intro_byline Roboto">
+            By <strong>Wais Ahmad Alizai</strong>
+          </p>
+          <time class="intro__date" datetime="2025-07-10T11:32">
+            10/07/2025
+          </time>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  
+  
+  
+  <div class="uk-container uk-width-3-5@m uk-margin-top">
+
+    <div id="progress-container">
+      <div id="progress-bar"></div>
+    </div>
+
+
+    <div class="social-buttons">
+      <a href="https://www.facebook.com/wais.ahmad.5" class="facebook" title="Facebook" target="_blank">
+        <i class="fab fa-facebook-f"></i>
+      </a>
+      <a href="https://x.com/w_a_alizai" class="twitter" title="X" target="_blank">
+        <i class="fab fa-x-twitter"></i>
+      </a>
+      <a href="https://www.linkedin.com/in/waisahmadalizai" class="linkedin" title="LinkedIn" target="_blank">
+        <i class="fab fa-linkedin-in"></i>
+      </a>
+    </div>
+    
+
+    <svg style="display:none;">
+      <symbol id="icon-play" viewBox="0 0 24 24">
+        <polygon points="6,4 20,12 6,20" />
+      </symbol>
+    </svg>
+    
+
+   <p> An American-British national and freelance journalist Christopher Allen was <span class="text-legend shot dead" > shot dead </span> on 26 August 2017 after embedding with rebel forces to cover a clash in South Sudan. </p>
+
+   <div class="main-image">
+    <figure class="n-content-image n-content-image--full">
+      <picture>
+        <source media="(min-width: 700px)" srcset="christopher_allen.jpg">
+        <img src="christopher_allen.jpg" alt="Christopher Allen">
+      </picture>
+      <figcaption class="below-caption">
+         Allen in South Sudan in 2017. Photo courtesy of the 
+        <a href="https://www.christopherallen.org/" target="_blank">Christopher Allen website</a>, used with permission from his family.
+      </figcaption>
+    </figure>
+  </div> 
+
     <p> Allen was killed by government forces and his dead body was "deliberately stripped naked", according to <a href="https://www.doughtystreet.co.uk/news/family-journalist-killed-south-sudan-say-governments-have-failed-him-and-call-investigation">his family statement.</a> </p>
   
   <p> South Sudanese Minister of Information Michael Makuei, while addressing a ceremony to mark the International Day to End Impunity for Crimes against Journalists in 2022, called him a "rebel". Makuei said that the government was not launching an investigation into the case. </p>

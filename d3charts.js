@@ -137,7 +137,7 @@ L.marker([48.723903, 37.567915], { icon: customIcon }).addTo(map1)
 
   const tooltip = d3.select("#tooltip");
 
-  d3.csv("data/local_foreign_journalists.csv", d => ({
+  d3.csv("UNI_FINAL_PROJECT/data/local_foreign_journalists.csv", d => ({
     Year: d.Year.trim(),
     Local: +d["Local"],
     Foreign: +d["Foreign"]
