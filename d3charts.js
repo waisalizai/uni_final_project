@@ -371,8 +371,6 @@ L.marker([48.723903, 37.567915], { icon: customIcon }).addTo(map1)
     document.getElementById('progress-bar').style.width = progress + '%';
   });
 
-
-
 //map
 
   import * as d3 from 'https://cdn.jsdelivr.net/npm/d3@7/+esm';
