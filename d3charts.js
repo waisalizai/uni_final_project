@@ -164,7 +164,6 @@ L.marker([48.723903, 37.567915], { icon: customIcon }).addTo(map1)
       .text("Source: CPJ data; chart created with D3");
   });
 
-
 //chart
 
   const container = d3.select("#chart1");
