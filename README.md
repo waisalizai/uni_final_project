@@ -63,5 +63,3 @@
 <h2> Live Project </h2>
 
 https://waisalizai.github.io/uni_final_project/
-
-<p> Note: This project is released for educational and non-commercial use. </p>
