@@ -4,49 +4,64 @@
 
 <p> The project investigates and visualises the killing of journalists worldwide between 1992 and 2024, with a particular focus on conflict and war zones. Using verified datasets and interactive visualisation, the feature explores long-term trends, geographic distribution, and the increasing risks faced by journalists reporting from areas affected by war. </p>
 
-## Data and Methodology
+<h2> Data and Methodology </h2>
 
-- Primary data source: Committee to Protect Journalists (CPJ)
+<ul class="uk-list">
+  
+ <li> Primary data source: Committee to Protect Journalists (CPJ) </li>
 
-### Data cleaned, structured, and analysed using:
+</ul>
 
-- Python (Pandas)
+<h2> Data cleaned, structured, and analysed using: </h2>
 
-- SQL
+<ul class="UK-list">
 
-- R
+<li> Python (Pandas) </li>
 
-- Excel
+<li> SQL </li>
 
-Note: Only CPJ-defined confirmed work-related deaths are included in core analyses, in line with CPJ methodology.
+<li> R </li>
 
-## Visualisations
+<li> Excel </li>
 
-A statistical chart built in R to analyse trends over time
+</ul>
 
-Interactive D3.js visualisations
+<p> Note: Only CPJ-defined confirmed work-related deaths are included in core analyses, in line with CPJ methodology. </p>
 
-Maps built with Leaflet and D3
+<h2> Visualisations </h2>
 
-All visualisations are designed to support editorial storytelling and allow readers to explore the data interactively.
+<ul class="uk-list">
 
-## Tools and Technologies
+<li> A statistical chart built in R to analyse trends over time </li>
 
-- R
+<li> Interactive D3.js visualisations </li>
 
-- D3.js
+<li> Maps built with Leaflet and D3 </li>
 
-- Leaflet
+</ul>
 
-- Python (Pandas)
+<p> Note: All visualisations are designed to support editorial storytelling and allow readers to explore the data interactively. </p> 
 
-- SQL
+<h2> Tools and Technologies </h2>
 
-- HTML / CSS / JavaScript
+<ul class="uk-list">
 
-## Live Project
+<li> R </li>
 
-https://waisalizai.github.io/uni_final_project/ 
+<li> D3.js </li>
 
+<li> Leaflet </li>
 
+<li> Python (Pandas) </li>
 
+<li> SQL </li>
+
+<li> HTML / CSS / JavaScript </li>
+
+</ul>
+
+<h2> Live Project </h2>
+
+https://waisalizai.github.io/uni_final_project/
+
+<p> Note: This project is released for educational and non-commercial use. </p>
