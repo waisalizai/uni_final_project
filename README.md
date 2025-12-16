@@ -4,11 +4,11 @@
 
 <p> The project investigates and visualises the killing of journalists worldwide between 1992 and 2024, with a particular focus on conflict and war zones. Using verified datasets and interactive visualisation, the feature explores long-term trends, geographic distribution, and the increasing risks faced by journalists reporting from areas affected by war. </p>
 
-<h2> Data and Methodology </h2>
+<h2> Data Source </h2>
 
 <ul class="uk-list">
   
- <li> Primary data source: Committee to Protect Journalists (CPJ) </li>
+ <li> Committee to Protect Journalists (CPJ) </li>
 
 </ul>
 
