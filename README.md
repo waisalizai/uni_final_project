@@ -1,8 +1,8 @@
-# Project Overview
+<h1> Project Overview </h1>
 
-This repository contains my Major Practical Project, a data-driven journalism feature titled “Journalist deaths hit record levels amid surge in global conflicts.”
+<p> This repository contains my Major Practical Project, a data-driven journalism feature titled “Journalist deaths hit record levels amid surge in global conflicts.” </p>
 
-The project investigates and visualises the killing of journalists worldwide between 1992 and 2024, with a particular focus on conflict and war zones. Using verified datasets and interactive visualisation, the feature explores long-term trends, geographic distribution, and the increasing risks faced by journalists reporting from areas affected by war.
+<p> The project investigates and visualises the killing of journalists worldwide between 1992 and 2024, with a particular focus on conflict and war zones. Using verified datasets and interactive visualisation, the feature explores long-term trends, geographic distribution, and the increasing risks faced by journalists reporting from areas affected by war. </p>
 
 ## Data and Methodology
 
@@ -20,34 +20,33 @@ The project investigates and visualises the killing of journalists worldwide bet
 
 Note: Only CPJ-defined confirmed work-related deaths are included in core analyses, in line with CPJ methodology.
 
-Methodological choices were guided by journalistic standards of accuracy, transparency, and reproducibility.
+## Visualisations
 
-Visualisations
+A statistical chart built in R to analyse trends over time
 
-The feature includes:
+Interactive D3.js visualisations
 
-Statistical charts built in R to analyse trends over time
-
-Interactive D3.js visualisations for comparative and temporal analysis
-
-Geospatial maps built with Leaflet and D3 to show country-level and regional patterns
+Maps built with Leaflet and D3
 
 All visualisations are designed to support editorial storytelling and allow readers to explore the data interactively.
 
-Tools & Technologies
+## Tools and Technologies
 
-R
+- R
 
-D3.js
+- D3.js
 
-Leaflet
+- Leaflet
 
-Python (Pandas)
+- Python (Pandas)
 
-SQL
+- SQL
 
-HTML / CSS / JavaScript
+- HTML / CSS / JavaScript
 
-Live Project
+## Live Project
+
+https://waisalizai.github.io/uni_final_project/ 
+
 
 
